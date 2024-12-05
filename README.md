@@ -33,6 +33,7 @@ based on original document and follow-up email, I haved designed the system with
   - entering their details
   - creating a password for them
   - assigning them to a teacher
+    - teachers are given based by major ?
 
 ## System Spec
 
@@ -47,18 +48,12 @@ based on original document and follow-up email, I haved designed the system with
   - SQLite database file
   - a folder to store all the report files from students
 
-
-### Build/Serve
-
-During frontend development I used Vite as the runtime tool. When frontend was finished I built the final app into static files into folder `/dist` and it can be served statically by the backend express server.  
-i.e. backend server acts as both web server and api server.
-
 ## API Spec
 
 HTTP 1.1 REST API provided using `localhost:[SERVER_PORT]/api`.  
 -> default port is `8080`. can be changed in `.env.template`
 
-tried to just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code and has its own api, etc) had to be taken.
+tried to just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code, etc) had to be taken.
 
 ### 1. Login and Logout (Student, Teacher)
 
@@ -77,8 +72,9 @@ enter a password and obtain a httponly cookie
 
 |Status| Content-Type |Response|
 |-|-|-|
-|201 Created| application/json | { "message": "logged in" <br> "user": { <br> "first_name" : String, <br> "last_name" : String } } | ds
-|401 Unauthorized| application/json| { "error": "Incorrect pasword" }|
+|201 Created| application/json | { "user": { <br> "first_name" : String, <br> "last_name" : String } } |
+|401 Unauthorized| application/json| { "error": "Incorrect password" }|
+|500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} |
 
 2. Logout (DELETE)
 
@@ -86,19 +82,70 @@ enter a password and obtain a httponly cookie
 |-|-|-|
 |204 No Content|-|-|
 |401 Unauthorized|application/json|{ "error": "No cookie" }|
-|404 Not Found|application/json|{ "error": "Session already logged out"}|
+|500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} |
 
-### 2. Upload File (Student)
+### 2. Login and Logout (Admin)
+
+i hardcoded admin password for simplicity which is why a separate endpoint is needed. also just returns httponly cookie. response has no body.
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|POST|/admin|application/json|  { "password": String } |
+|DELETE|/admin| application/json| - |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|201 Created| application/json | | 
+|401 Unauthorized| application/json| { "error": "Incorrect password" }|
+|500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} |
+
+### 3. 
+
+
+
 
 ```mermaid
 erDiagram
     user {
-        int id PK
-        text password(bcrypt) 
+        int id PK "NOT NULL"
+        text password "NOT NULL"
+        text first_name "NOT NULL"
+        text last_name "NOT NULL"
+        text role "student | teacher"
+        %% role = 
     }
-    role {
-        int id PK
-        text role
+    student {
+        int id PK, FK "NOT NULL"
+        text major "NOT NULL"
+        int assigned_teacher FK
     }
-    
+    teacher {
+        int id PK, FK "NOT NULL"
+        text department "NOT NULL"
+    }
+    progress_report {
+        int id PK "NOT NULL"
+        int student_id FK "NOT NULL"
+        text name
+        text filepath
+        int grade "0-100"
+    }
+    final_report {
+        int id PK "NOT NULL"
+        int student_id FK "NOT NULL"
+        text name
+        text filepath
+        int grade "0-100"
+    }
+    user || -- || student : IS-A
+    user || -- || teacher : IS-A
+    student }o -- || teacher : "assigned to"
+    student || -- o| progress_report : uploads
+    student || -- o| final_report : uploads
+    teacher || -- || progress_report : grades
+    teacher || -- || final_report : grades
 ```
