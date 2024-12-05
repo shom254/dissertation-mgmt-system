@@ -47,6 +47,12 @@ based on original document and follow-up email, I haved designed the system with
   - SQLite database file
   - a folder to store all the report files from students
 
+
+### Build/Serve
+
+During frontend development I used Vite as the runtime tool. When frontend was finished I built the final app into static files into folder `/dist` and it can be served statically by the backend express server.  
+i.e. backend server acts as both web server and api server.
+
 ## API Spec
 
 HTTP 1.1 REST API provided using `localhost:[SERVER_PORT]/api`.  
