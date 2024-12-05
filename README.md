@@ -111,21 +111,8 @@ i hardcoded admin password for simplicity which is why a separate endpoint is ne
 ```mermaid
 erDiagram
     user {
-        int id PK "NOT NULL"
-        text password "NOT NULL"
-        text first_name "NOT NULL"
-        text last_name "NOT NULL"
-        text role "student | teacher"
-        %% role = 
-    }
-    student {
-        int id PK, FK "NOT NULL"
-        text major "NOT NULL"
-        int assigned_teacher FK
-    }
-    teacher {
-        int id PK, FK "NOT NULL"
-        text department "NOT NULL"
+        int id PK
+        text password(bcrypt) 
     }
     progress_report {
         int id PK "NOT NULL"
