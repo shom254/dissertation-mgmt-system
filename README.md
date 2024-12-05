@@ -37,6 +37,17 @@ based on original document and follow-up email, I haved designed the system with
 
 ## System Spec
 
+### App Structure
+
+```text
+/ (home page for login)
+|__student (uploading reports)
+|__teacher (students list)
+|   |__:studentid  (1 student's page)
+|__admin (list of all students and teachers)
+|   |__add-student
+```
+
 ### App Stack
 
 - Frontend: Vue.js 3. Build with Vite
@@ -50,8 +61,7 @@ based on original document and follow-up email, I haved designed the system with
 
 ## API Spec
 
-HTTP 1.1 REST API provided using `localhost:[SERVER_PORT]/api`.  
--> default port is `8080`. can be changed in `.env.template`
+HTTP 1.1 REST API provided using `localhost:8080/api`.  
 
 tried to just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code, etc) had to be taken.
 
@@ -72,9 +82,9 @@ enter a password and obtain a httponly cookie
 
 |Status| Content-Type |Response|
 |-|-|-|
-|201 Created| application/json | { "user": { <br> "first_name" : String, <br> "last_name" : String } } |
+|201 Created| application/json | { "user": { <br> "role" : "student \| teacher" <br> "first_name" : String, <br> "last_name" : String } } |
 |401 Unauthorized| application/json| { "error": "Incorrect password" }|
-|500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} |
+<!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
 2. Logout (DELETE)
 
@@ -82,7 +92,7 @@ enter a password and obtain a httponly cookie
 |-|-|-|
 |204 No Content|-|-|
 |401 Unauthorized|application/json|{ "error": "No cookie" }|
-|500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} |
+<!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
 ### 2. Login and Logout (Admin)
 
@@ -101,9 +111,11 @@ i hardcoded admin password for simplicity which is why a separate endpoint is ne
 |-|-|-|
 |201 Created| application/json | | 
 |401 Unauthorized| application/json| { "error": "Incorrect password" }|
-|500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} |
+<!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
-### 3. 
+### 3. Get Progress and Final Report Details (User)
+
+
 
 
 
