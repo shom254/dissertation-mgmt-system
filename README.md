@@ -5,7 +5,7 @@
 based on original document and follow-up email, I haved designed the system with requirements/assumptions as follows:
 
 - support user accounts using password only. session management and api authorization using basic http cookies.
-- 3 types of accounts/roles: student, teacher, admin. each account gets redirected to a different portal.
+- 3 types of roles: student, teacher (user accounts via database), admin (1 "account", hardcoded password in backend). each account gets redirected to a different portal.
 - ONE teacher can grade multiple students' work.
 
 ### Student
@@ -52,7 +52,7 @@ based on original document and follow-up email, I haved designed the system with
 HTTP 1.1 REST API provided using `localhost:[SERVER_PORT]/api`.  
 -> default port is `8080`. can be changed in `.env.template`
 
-triedto just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code and has its own api) had to be taken.
+triedto just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code and has its own api, etc) had to be taken.
 
 ### 1. Login and Logout (Student, Teacher)
 
