@@ -41,11 +41,12 @@ based on original document and follow-up email, I haved designed the system with
 
 ```text
 / (home page for login)
-|__student (uploading reports)
-|__teacher (students list)
-|   |__:studentid  (1 student's page)
-|__admin (list of all students and teachers)
-|   |__add-student
+|__app/
+  |__student (uploading reports)
+  |__teacher (students list)
+  |   |__:studentid  (1 student's page)
+  |__admin (list of all students and teachers)
+  |   |__add-student
 ```
 
 ### App Stack
@@ -125,19 +126,20 @@ erDiagram
     user {
         int id PK "NOT NULL"
         text password "NOT NULL"
-        text first_name "NOT NULL"
-        text last_name "NOT NULL"
         text role "student | teacher"
         %% role = 
     }
     student {
         int id PK, FK "NOT NULL"
+        text first_name "NOT NULL"
+        text last_name "NOT NULL"
         text major "NOT NULL"
         int assigned_teacher FK
     }
     teacher {
+        text first_name "NOT NULL"
+        text last_name "NOT NULL"
         int id PK, FK "NOT NULL"
-        text department "NOT NULL"
     }
     progress_report {
         int id PK "NOT NULL"
