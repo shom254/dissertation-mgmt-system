@@ -47,12 +47,18 @@ based on original document and follow-up email, I haved designed the system with
   - SQLite database file
   - a folder to store all the report files from students
 
+
+### Build/Serve
+
+During frontend development I used Vite as the runtime tool. When frontend was finished I built the final app into static files into folder `/dist` and it can be served statically by the backend express server.  
+i.e. backend server acts as both web server and api server.
+
 ## API Spec
 
 HTTP 1.1 REST API provided using `localhost:[SERVER_PORT]/api`.  
 -> default port is `8080`. can be changed in `.env.template`
 
-triedto just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code and has its own api, etc) had to be taken.
+tried to just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code and has its own api, etc) had to be taken.
 
 ### 1. Login and Logout (Student, Teacher)
 
