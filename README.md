@@ -129,7 +129,7 @@ Logout (DELETE)
 Status|Content-Type|Response|
 |-|-|-|
 |204 No Content|-|-|
-|401 Unauthorized|application/json|{ "error": "No cookie" }|
+|401 Unauthorized|application/json|{ "error": "Session expired" }|
 <!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
 ### 3. Get Progress and Final Report Details of a Student
@@ -138,14 +138,16 @@ Status|Content-Type|Response|
 
 | Method | Endpoint | Content-Type | payload |
 |-|-|-|-|
-|GET|/reports|application/json|  { "id": Integer } |
+|GET|/reports|application/json| - (user body in session) |
 
 #### Response
 
 |Status| Content-Type |Response|
 |-|-|-|
-|200 OK| application/json | { "progress":  <br> "final" : "" <br> } |
-|401 Unauthorized| application/json| { "error": "Incorrect password" }|
+|200 OK| application/json | { "progress": { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> }, <br> "final" : { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> } <br> } |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+
 
 
 

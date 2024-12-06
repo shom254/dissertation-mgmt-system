@@ -37,6 +37,11 @@
 
 /* html tags */
 
+table {
+  border-collapse: collapse;
+  border: 3px solid purple;
+}
+
 body, html {
   font-family: Helvetica, Arial, sans-serif;
   height: 100%; 

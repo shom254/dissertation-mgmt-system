@@ -25,7 +25,7 @@ create table progress_report (
     grade int
 )
 
-create table progress_report (
+create table final_report (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER REFERENCES student (id),
     "name" text
@@ -33,18 +33,16 @@ create table progress_report (
     grade int
 )
 
--- INSERT INTO user (password, role)
--- VALUES 
--- (),
--- (),
--- (),
--- (),
--- (),
--- (),
--- (),
--- 7 student 3 teachers
--- (),
--- (),
--- (),
-
-INSERT INTO
+-- insert 6 teachers
+INSERT INTO user (password, role)
+VALUES 
+(),
+(),
+(),
+(),
+(),
+(),
+(),
+(),
+(),
+(),
