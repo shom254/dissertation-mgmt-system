@@ -1,20 +1,58 @@
-body {
+/* colors */
+:root {
+  --blue: #b3ecff;
+  --darkblue: #00ace6;
+  --red: #ff4d4d;
+  --darkred: #990000;
+  --green: #84e184;
+  --darkgreen: #28a428;
+}
+
+/* custom */
+.button {
+  background-color: var(--blue);
+  padding: 10px 10px;
+  height: fit-content;
+  border-width: 0;
+  box-shadow: 0 6px 8px -1px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+  font-size: 1.1rem;
+}
+
+.button:hover {
+  background-color: var(--darkblue);
+  cursor: pointer;
+}
+
+.inputtext {
+  padding: 10px 10px;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+
+
+/* html tags */
+
+body, html {
   font-family: Helvetica, Arial, sans-serif;
   height: 100%; 
   width: 100%;
   margin: 0;
 }
 
-body * {
+* {
   box-sizing: border-box;
 }
 
 h1 {
-  font-size: 1.65rem;
+  font-size: 1.5rem;
 }
 
 h2 {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: normal;
 }
 
@@ -23,3 +61,4 @@ h3 {
   font-weight: normal;
   text-decoration: underline;
 }
+
