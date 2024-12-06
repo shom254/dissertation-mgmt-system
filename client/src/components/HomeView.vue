@@ -6,7 +6,7 @@
             <h2>Admin Sign In</h2>
             
             <input class="inputtext" name="password" type="password"/>
-            <button class="button"> Testing </button>
+            <button class="button"> Log In </button>
 
             <h1>{{ dsdsd }}</h1>
             <span id="switchuser" @click="admin=!admin">Regular User Login ></span>
@@ -16,7 +16,7 @@
             <h2>Please Sign In (Student / Teacher)</h2>
             
             <input class="inputtext" name="password" type="password"/>
-            <button class="button"> Testing </button>
+            <button class="button"> Log In </button>
 
             <h1>{{ dsdsd }}</h1>
             <span id="switchadmin" @click="admin=!admin">Admin Login ></span>
