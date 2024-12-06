@@ -1,6 +1,16 @@
 # Dissertation Management System
 
-Given only 3 days and also needing to study for the exams next week, i just tried my best to quickly implement a functioning vue frontend and api server + sqldatabase, there were rushed design decisions (inefficient database design, all server functions in 1 source code file `server.js`, admin credentials hardcoded into server code and requires separate API, barebones website design, no navigation guards/fallback for session-expire/duplicate login, etc.) had to be taken. but I hope the requirements were fulfilled.
+Given only 3 days and also needing to study for the exams next week, my goal was to just try my best to quickly implement a **functioning** vue frontend and api server + sqldatabase, so there are some rushed/missing design decisions to keep in mind:
+
+- all server functions in 1 source code file `server.js` (instead of structuring into `router`, `utils`, etc)
+- admin credentials hardcoded into server code and requires separate API
+- no input sanitation/validation
+  - assume all text inputs are valid
+  - assume all files uploaded are unique / not duplicate names
+- simple website design and components, no vue-router navigation guards/fallback pages/popup for session expiry, duplicate login, etc
+- sessions are stored in-memory rather than to the database
+
+but I hope the requirements were fulfilled.
 
 ## Requirements Spec
 
@@ -45,7 +55,7 @@ based on original document and follow-up email, I haved designed the system with
 |__app/
   |__student (uploading reports)
   |__teacher (students list)
-  |   |__:studentid  (1 student's page)
+  |   |__:studentid  (1 student's page, for grading)
   |__admin (list of all students and teachers)
   |   |__add-student
 ```
@@ -57,7 +67,7 @@ based on original document and follow-up email, I haved designed the system with
   - Vue-Router for client side URL routing
   - Small app so just basic JS state management instead of using Pinia library
 - Backend: Express.js on Node
-  - session management and auth using HttpOnly cookies
+  - session management and auth using cookies
   - SQLite database file
   - a folder to store all the report files from students
 
