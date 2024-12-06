@@ -22,7 +22,7 @@ const routes = [
       { name: 'admin', path: '', component: AdminContainer, meta: { title: 'Teacher Home' } },
       { name: 'add-student', path: 'student', component: AdminAddStudentCard, meta:  { title: 'Add Student' } },
     ] },
-  ]},
+  ], redirect : { name : 'home' }},
   {}
 ]
 
