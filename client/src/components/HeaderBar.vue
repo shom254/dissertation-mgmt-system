@@ -1,15 +1,12 @@
 <template>
     <header id="header">
         <h1 id="title">Dissertation Management System</h1>
-        <button id="logout">Log Out</button>
+        <LogoutButton/>
     </header>
 </template>
 
 <script setup>
-    import { useRoute} from 'vue-router';
-    //import { watchEffect, ref } from 'vue';
-    
-    const route = useRoute();
+    import LogoutButton from './LogoutButton.vue';
     console.log('header loaded')
 </script>
 

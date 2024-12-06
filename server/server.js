@@ -31,13 +31,14 @@ const sql4 = `INSERT INTO progress_report VALUES (?, ?, NULL) WHERE student_id =
 const sql5 = `INSERT INTO final_report VALUES (?, ?, NULL) WHERE student_id = ?`
 
 //6. See Assigned Students (Teacher)
-const sql6 = `SELECT * FROM student WHERE assigned_teacher = ?`
+const sql6 = `SELECT s.id, s.first_name, s.last_name, pr.grade AS grade1, fr.grade AS grade2 FROM student s JOIN progress_record pr ON s.id = pr.student_id JOIN final_record fr ON s.id = fr.student_id`
 
 //7. Grade Progress Report (Teacher)
-const sql7 = `UPDATE progress_report SET grade = ? WHERE student_id = (SELECT id FROM student WHERE first_name = ? AND last_name = ?)`
+const sql7 = `UPDATE progress_report SET grade = ? WHERE student_id = ?`
+//student_id = (SELECT id FROM student WHERE first_name = ? AND last_name = ?)
 
 //8. Grade Final Report (Teacher)
-const sql8 = `UPDATE final_report SET grade = ? WHERE student_id = (SELECT id FROM student WHERE first_name = ? AND last_name = ?)`
+const sql8 = `UPDATE final_report SET grade = ? WHERE student_id = ?`
 
 //9. See All Students (admin)
 const sql9 = `SELECT s.first_name, s.last_name, pr.grade AS grade1, fr.grade AS grade2, s.assigned_teacher FROM student s JOIN progress_record pr ON s.id = pr.student_id JOIN final_record fr ON s.id = fr.student_id`

@@ -8,7 +8,8 @@
                 <template v-for="(value, key) in reportdetails.progress">
                     <tr>
                         <th class="leftalign">{{ key }}</th>
-                        <td class="leftalign">{{ value }}</td>
+                        <td v-if="key != 'grade'" class="leftalign">{{ value }}</td>
+                        <td v-else>{{ (value !== null) ? (value + '/100') : 'Not graded yet' }}</td>
                     </tr>
                 </template>
             </table>
@@ -30,10 +31,11 @@
         <p v-if="!finalready">Loading...</p>
         <div v-else class="data">
             <table>
-                <template v-for="(value, key) in reportdetails.progress">
+                <template v-for="(value, key) in reportdetails.final">
                     <tr>
                         <th class="leftalign">{{ key }}</th>
-                        <td class="leftalign">{{ value }}</td>
+                        <td v-if="key != 'grade'" class="leftalign">{{ value }}</td>
+                        <td v-else>{{ (value !== null) ? (value + '/100') : 'Not graded yet' }}</td>
                     </tr>
                 </template>
             </table>
@@ -57,7 +59,7 @@ import { ref, onMounted } from 'vue'
 
 // data
 onMounted(() => {
-  console.log("FETCHING REPORT DATA")
+  console.log(`FETCHING REPORT DATA....progress ${progressready}...final ${finalready}`)
 /*
   fetch('', {
     method: 'GET'

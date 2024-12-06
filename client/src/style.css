@@ -2,8 +2,8 @@
 :root {
   --blue: #b3ecff;
   --darkblue: #00ace6;
-  --red: #ff4d4d;
-  --darkred: #990000;
+  --red: #f7a5a3;
+  --darkred: #ff4d4d;
   --green: #84e184;
   --darkgreen: #28a428;
 }
@@ -83,6 +83,10 @@ table tr:nth-child(odd) {
 
 table tr:nth-child(even) {
   background-color: #ffecb3;
+}
+
+table tr:hover {
+  background-color: #ded202;
 }
 
 
