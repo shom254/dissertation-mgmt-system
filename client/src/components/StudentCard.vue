@@ -2,15 +2,17 @@
     <main id="main">
         <!-- Progress Report -->
         <h2>Progress Report</h2>
-        <div style="overflow-x: auto">
+        <p v-if="ready">Loading...</p>
+        <div v-else class="data">
             <table>
-                <template v-for="(value, key) in reportdetails.progress">
+                <!--<template v-for="(value, key) in reportdetails.progress">
                     <tr>
                         <th class="leftalign">{{ key }}</th>
                         <td class="leftalign">{{ value }}</td>
                     </tr>
                 </template>
-                <!--
+            -->
+            <tbody>
                 <tr>
                     <th>Name</th>
                     <td>Loading...</td>
@@ -23,22 +25,58 @@
                     <th>Grade</th>
                     <td>Loading...</td>
                 </tr>
-                -->
+            </tbody> 
             </table>
+            <button class="button" style="margin-top: 20px">Upload File</button>
         </div>
         
-
         <!-- Final Report -->
-        <h2>Final Report</h2>
-        <div style="overflow-x: auto">
-            
+        <h2 style="margin-top: 50px">Final Report</h2>
+        <p v-if="ready">Loading...</p>
+        <div v-else class="data">
+            <table>
+                <!--<template v-for="(value, key) in reportdetails.progress">
+                    <tr>
+                        <th class="leftalign">{{ key }}</th>
+                        <td class="leftalign">{{ value }}</td>
+                    </tr>
+                </template>
+            -->
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>Loading...</td>
+                </tr>
+                <tr>
+                    <th>Submission</th>
+                    <td>Loading...</td>
+                </tr>
+                <tr>
+                    <th>Grade</th>
+                    <td>Loading...</td>
+                </tr>
+            </tbody> 
+            </table>
         </div>
-
     </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+// data
+onMounted(() => {
+  console.log("FETCHING REPORT DATA")
+
+  fetch('', {
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(data => {reportdetais = data})
+  */
+  //..
+})
+const ready = ref(false)
 const reportdetails = ref(null)
 /*
 {
@@ -63,6 +101,23 @@ const reportdetails = ref(null)
     text-align: left
 }
 
+table {
+    table-layout: fixed;
+    width: 45%;
+    margin: auto;
+}
+
+.data {
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+table th {
+    width: 20%;
+}
+
 main {
     height: fit-content;
     width: 95%;
@@ -76,7 +131,22 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     
+}
+
+input::file-selector-button {
+  background-color: var(--green);
+  padding: 10px 10px;
+  height: fit-content;
+  border-width: 0;
+  box-shadow: 0 6px 8px -1px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+  font-size: 1.1rem;
+}
+
+input::file-selector-button:hover {
+  background-color: var(--darkgreen);
+  cursor: pointer;
 }
 
 </style>

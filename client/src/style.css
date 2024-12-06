@@ -24,6 +24,34 @@
   cursor: pointer;
 }
 
+.button--green {
+  background-color: var(--green);
+  padding: 10px 10px;
+  height: fit-content;
+  border-width: 0;
+  box-shadow: 0 6px 8px -1px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+  font-size: 1.1rem;
+}
+
+.button--green:hover {
+  background-color: var(--darkgreen);
+  cursor: pointer;
+}
+
+.button--red {
+  background-color: var(--red);
+  padding: 10px 10px;
+  height: fit-content;
+  border-width: 0;
+  box-shadow: 0 6px 8px -1px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+  font-size: 1.1rem;
+}
+
+.button--red:hover {
+  background-color: var(--darkred);
+  cursor: pointer;
+}
+
 .inputtext {
   padding: 10px 10px;
 }
@@ -39,8 +67,24 @@
 
 table {
   border-collapse: collapse;
-  border: 3px solid purple;
 }
+
+table th, td {
+  padding: 10px 10px
+}
+
+table th {
+  background-color: rgb(214, 214, 214);
+}
+
+table tr:nth-child(odd) {
+  background-color: #f9ffe6;
+}
+
+table tr:nth-child(even) {
+  background-color: #ffecb3;
+}
+
 
 body, html {
   font-family: Helvetica, Arial, sans-serif;
