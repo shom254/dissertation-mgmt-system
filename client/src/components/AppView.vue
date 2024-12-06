@@ -1,27 +1,32 @@
 <template>
-    <HeaderBar></HeaderBar>
-    <h1>App view</h1>
-    <br>
-    <h2> h2 i am heading 2</h2>
-    <br>
-    <h3> h3 i am heading 3</h3>
-    <br>
-    <h4> h4 i am heading 4</h4>
-    <br>
-    <h5> h5 i am heading 5</h5>
-    <br>
-    <h6> h6 i am heading 6</h6>
-    <br>
-    <p> hppspdpdppdpspdspdp</p>
-    
-    <RouterView/>
+    <div id="background">
+        <HeaderBar></HeaderBar>
+        <h1 id="greeting">Welcome, {{ first_name }} {{ last_name }}</h1>
+        <RouterView/> 
+        <!--studentcard, teachercard, studentteachercard, admincard-->
+    </div>
 </template>
 
 <script setup>
-import HeaderBar from "./HeaderBar.vue"
+import HeaderBar from "./HeaderBar.vue";
+import { ref } from 'vue';
+
+//const role = ref('')
+const first_name = ref("")
+const last_name = ref("")
 
 </script>
 
 <style scoped>
 
+#background {
+  height: 100%;
+  width: auto;
+  background-color: rgb(238, 239, 242);
+}
+
+#greeting {
+    margin-left: 30px;
+    margin-top: 30px;
+}
 </style>
