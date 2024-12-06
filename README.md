@@ -175,7 +175,7 @@ Status|Content-Type|Response|
 
 | Method | Endpoint | Content-Type | payload |
 |-|-|-|-|
-|GET|/reports|application/json| { id: Integer } |
+|GET|/reports|application/json| { id: Integer } OR id from session |
 
 #### Response
 
