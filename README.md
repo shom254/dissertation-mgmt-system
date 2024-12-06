@@ -1,6 +1,6 @@
 # Dissertation Management System
 
-Given only 3 days and also needing to study for the exams next week, my goal was to just try my best to quickly implement a **functioning** vue frontend and api server + sqldatabase, so there are some rushed/missing design decisions to keep in mind:
+Given only 3 days and also needing to study for the exams next week, my goal was to just try my best to quickly implement a **minimum functioning** vue frontend and api server + sqldatabase, so there are some rushed/missing design decisions to keep in mind:
 
 - all server functions in 1 source code file `server.js` (instead of structuring into `router`, `utils`, etc)
 - admin credentials hardcoded into server code and requires separate API
@@ -8,11 +8,49 @@ Given only 3 days and also needing to study for the exams next week, my goal was
   - assume all text inputs are valid
   - assume all files uploaded are unique / not duplicate names
 - download api isn't protected (for easier debugging and dev)
-- very simple website design and components, no vue-router navigation guards/fallback/checks and pages for session expiry, duplicate login, etc
+- very simple website design and components, no special vue-router navigation guards for session expiry, duplicate login, etc
 - passwords are stored unencrypted instead of hashed (for easier debugging and dev)
 - sessions are stored in-memory rather than to the database
 
 but I believe the basic requirements were fulfilled.
+
+## Instructions to Run
+
+**The Vue app has already been built to static files that will be served from `/server/dist` by the server on port `8080` (REST API also on same port)**
+
+### Running the already-built app
+
+```bash
+#1 go to server
+cd ./server
+
+#2. install dependencies
+npm install
+
+#3. start server
+npm run serve
+```
+
+### Running client as development server
+
+The vue app can also be run from its normal development mode in `client` by Vite, at port `5173`.
+
+```bash
+#1 go to client and install dependencies
+cd ./client
+npm install
+
+#3 go to server and install dependencies
+cd ./server
+npm install
+
+#3. start client and server (separate terminals)
+cd ./client
+npm run dev
+
+cd ./server
+npm run serve
+```
 
 ## Requirements Spec
 
@@ -65,7 +103,6 @@ based on original document and follow-up email, I haved designed the system with
 - Frontend: Vue.js 3. Build with Vite
   - Composition API style, Javascript
   - Vue-Router for client side URL routing
-  - Small app so just basic JS state management instead of using Pinia library
 - Backend: Express.js on Node
   - session management and auth using cookies
   - SQLite database file
