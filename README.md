@@ -132,7 +132,7 @@ Status|Content-Type|Response|
 |401 Unauthorized|application/json|{ "error": "Session expired" }|
 <!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
-### 3. Get Progress and Final Report Details of a Student
+### 3. Get Progress and Final Report Details (Student)
 
 #### Request
 
@@ -147,7 +147,51 @@ Status|Content-Type|Response|
 |200 OK| application/json | { "progress": { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> }, <br> "final" : { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> } <br> } |
 |401 Unauthorized| application/json| { "error": "Session expired" }|
 
+### 4. Upload Progress File (Student)
 
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|POST|/reports/progress|multipart/form-data| "name" : String <br> "file": .docx \| .pdf |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|201 Created| application/json | - |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+### 5. Upload Report File (Student)
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|POST|/reports/final|multipart/form-data| "name" : String <br> "file": .docx \| .pdf |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|201 Created| application/json | - ||
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+
+### 6. See Assigned Students (Teacher)
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|GET|/students|application/json| {} |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|200 OK| application/json |  |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
 
 
 
