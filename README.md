@@ -23,10 +23,8 @@ based on original document and follow-up email, I haved designed the system with
 ### Student
 
 - submit 2 reports: progress report, final report
-  - the progress report can be resubmitted (e.g. student changed his/her dissertation research topic)
-  - once the final report is submitted, it is considered complete submission to the system, and student cannot change anything
 - report file supported types: `.docx`, `.pdf`
-- submitted reports can be downloaded
+- submitted reports can be downloaded (tbc)
 
 ### Teacher
 
