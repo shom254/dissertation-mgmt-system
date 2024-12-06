@@ -1,5 +1,7 @@
 # Dissertation Management System
 
+Given only 3 days and also needing to study for the exams next week, i just tried my best to quickly implement a functioning vue frontend and api server + sqldatabase, there were rushed design decisions (inefficient database design, all server functions in 1 source code file `server.js`, admin credentials hardcoded into server code and requires separate API, barebones website design, no navigation guards/fallback for session-expire/duplicate login, etc.) had to be taken. but I hope the requirements were fulfilled.
+
 ## Requirements Spec
 
 based on original document and follow-up email, I haved designed the system with requirements/assumptions as follows:
@@ -62,8 +64,6 @@ based on original document and follow-up email, I haved designed the system with
 ## API Spec
 
 HTTP 1.1 REST API provided using `localhost:8080/api`.  
-
-tried to just quickly implement a working api and database so some inefficient design decisions and shortcuts (e.g. all backend function in 1 `server.js`, admin is hardcoded into server code, etc) had to be taken.
 
 ### 1. Login and Logout (Student, Teacher)
 
