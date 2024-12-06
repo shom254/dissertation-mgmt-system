@@ -2,61 +2,52 @@
     <main id="main">
         <!-- Progress Report -->
         <h2>Progress Report</h2>
-        <p v-if="ready">Loading...</p>
+        <p v-if="!progressready">Loading...</p>
         <div v-else class="data">
             <table>
-                <!--<template v-for="(value, key) in reportdetails.progress">
+                <template v-for="(value, key) in reportdetails.progress">
                     <tr>
                         <th class="leftalign">{{ key }}</th>
                         <td class="leftalign">{{ value }}</td>
                     </tr>
                 </template>
-            -->
-            <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td>Loading...</td>
-                </tr>
-                <tr>
-                    <th>Submission</th>
-                    <td>Loading...</td>
-                </tr>
-                <tr>
-                    <th>Grade</th>
-                    <td>Loading...</td>
-                </tr>
-            </tbody> 
             </table>
-            <button class="button" style="margin-top: 20px">Upload File</button>
+
+            <div class="upload">
+                <label for="uploadfile" style="margin-right: 10px">Upload your progress report:</label>
+                <input 
+                id="uploadfile" 
+                :disabled="disableuploadprogress"
+                type="file" 
+                accept=".doc,.docx,.pdf"                
+                style="margin-top: 20px"/>
+                <button class="button" :disabled="disableuploadprogress">Upload</button>
+            </div>
         </div>
         
         <!-- Final Report -->
         <h2 style="margin-top: 50px">Final Report</h2>
-        <p v-if="ready">Loading...</p>
+        <p v-if="!finalready">Loading...</p>
         <div v-else class="data">
             <table>
-                <!--<template v-for="(value, key) in reportdetails.progress">
+                <template v-for="(value, key) in reportdetails.progress">
                     <tr>
                         <th class="leftalign">{{ key }}</th>
                         <td class="leftalign">{{ value }}</td>
                     </tr>
                 </template>
-            -->
-            <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td>Loading...</td>
-                </tr>
-                <tr>
-                    <th>Submission</th>
-                    <td>Loading...</td>
-                </tr>
-                <tr>
-                    <th>Grade</th>
-                    <td>Loading...</td>
-                </tr>
-            </tbody> 
             </table>
+
+            <div class="upload">
+                <label for="uploadfile" style="margin-right: 10px">Upload your progress report:</label>
+                <input 
+                :disabled="disableuploadfinal"
+                id="uploadfile" 
+                type="file" 
+                accept=".doc,.docx,.pdf" 
+                style="margin-top: 20px"/>
+                <button class="button" :disabled="disableuploadprogress">Upload</button>
+            </div>
         </div>
     </main>
 </template>
@@ -67,7 +58,7 @@ import { ref, onMounted } from 'vue'
 // data
 onMounted(() => {
   console.log("FETCHING REPORT DATA")
-
+/*
   fetch('', {
     method: 'GET'
   })
@@ -76,8 +67,12 @@ onMounted(() => {
   */
   //..
 })
-const ready = ref(false)
-const reportdetails = ref(null)
+const disableuploadprogress = ref(true)
+const disableuploadfinal = ref(true)
+
+const progressready = ref(false)
+const finalready = ref(false)
+const reportdetails = ref({})
 /*
 {
     "progress": {
@@ -144,9 +139,5 @@ input::file-selector-button {
   font-size: 1.1rem;
 }
 
-input::file-selector-button:hover {
-  background-color: var(--darkgreen);
-  cursor: pointer;
-}
 
 </style>
