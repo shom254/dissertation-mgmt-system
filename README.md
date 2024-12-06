@@ -33,7 +33,6 @@ based on original document and follow-up email, I haved designed the system with
   - entering their details
   - creating a password for them
   - assigning them to a teacher
-    - teachers are given based by major ?
 
 ## System Spec
 
@@ -108,13 +107,36 @@ i hardcoded admin password for simplicity which is why a separate endpoint is ne
 
 #### Response
 
+Login (POST)
+
 |Status| Content-Type |Response|
 |-|-|-|
-|201 Created| application/json | | 
+|201 Created| application/json | - |
 |401 Unauthorized| application/json| { "error": "Incorrect password" }|
+
+Logout (DELETE)
+
+Status|Content-Type|Response|
+|-|-|-|
+|204 No Content|-|-|
+|401 Unauthorized|application/json|{ "error": "No cookie" }|
 <!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
-### 3. Get Progress and Final Report Details (User)
+### 3. Get Progress and Final Report Details of a Student
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|GET|/reports|application/json|  { "id": Integer } |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|200 OK| application/json | { "progress":  <br> "final" : "" <br> } |
+|401 Unauthorized| application/json| { "error": "Incorrect password" }|
+
 
 
 
@@ -133,7 +155,6 @@ erDiagram
         int id PK, FK "NOT NULL"
         text first_name "NOT NULL"
         text last_name "NOT NULL"
-        text major "NOT NULL"
         int assigned_teacher FK
     }
     teacher {
