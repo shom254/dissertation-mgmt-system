@@ -7,16 +7,18 @@ Given only 3 days and also needing to study for the exams next week, my goal was
 - no input sanitation/validation
   - assume all text inputs are valid
   - assume all files uploaded are unique / not duplicate names
-- simple website design and components, no vue-router navigation guards/fallback pages/popup for session expiry, duplicate login, etc
+- download api isn't protected (for easier debugging and dev)
+- very simple website design and components, no vue-router navigation guards/fallback/checks and pages for session expiry, duplicate login, etc
+- passwords are stored unencrypted instead of hashed (for easier debugging and dev)
 - sessions are stored in-memory rather than to the database
 
-but I hope the requirements were fulfilled.
+but I believe the basic requirements were fulfilled.
 
 ## Requirements Spec
 
 based on original document and follow-up email, I haved designed the system with requirements/assumptions as follows:
 
-- support user accounts using password only. session management and api authorization using basic http cookies.
+- support user accounts using password only. session management using http cookies and express-session. (10 minute sessions)
 - 3 types of roles: student, teacher (user accounts via database), admin (1 "account", hardcoded password in backend). each account gets redirected to a different portal.
 - ONE teacher can grade multiple students' work.
 
@@ -130,7 +132,7 @@ Status|Content-Type|Response|
 |401 Unauthorized|application/json|{ "error": "Session expired" }|
 <!-- |500 Server Error| application/json | { "error" : "Something went wrong. Please try again later."} | -->
 
-### 3. Get Progress and Final Report Details (Student)
+### 3. Get Progress and Final Report Details (Student | Teacher)
 
 #### Request
 
@@ -142,7 +144,7 @@ Status|Content-Type|Response|
 
 |Status| Content-Type |Response|
 |-|-|-|
-|200 OK| application/json | { "progress": { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> }, <br> "final" : { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> } <br> } |
+|200 OK| application/json | { "progress": { <br> "name": String <br> filename: "String", <br> "grade": Integer \| null <br> }, <br> "final" : { <br> "name": String <br> filename: "String" <br> "grade": Integer \| null <br> } <br> } |
 |401 Unauthorized| application/json| { "error": "Session expired" }|
 
 ### 4. Upload Progress File (Student)
@@ -172,7 +174,7 @@ Status|Content-Type|Response|
 
 |Status| Content-Type |Response|
 |-|-|-|
-|201 Created| application/json | - ||
+|201 Created| application/json | - |
 |401 Unauthorized| application/json| { "error": "Session expired" }|
 
 
@@ -182,20 +184,91 @@ Status|Content-Type|Response|
 
 | Method | Endpoint | Content-Type | payload |
 |-|-|-|-|
-|GET|/students|application/json| {} |
+|GET|/users/students|application/json| - (session user) |
 
 #### Response
 
 |Status| Content-Type |Response|
 |-|-|-|
-|200 OK| application/json |  |
+|200 OK| application/json | [ { "first_name": String, <br> "last_name" : String, <br> "grade1", : int \| null, <br> "grade2" : int \| null}, <br>.... ]  |
 |401 Unauthorized| application/json| { "error": "Session expired" }|
 
+### 7. Grade Progress Report (Teacher)
 
+#### Request
 
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|PATCH|/reports/progress|application/json| { <br>"first_name" : String, <br> "last_name": String <br> grade: Int[0-100] <br>} |
 
+#### Response
 
+|Status| Content-Type |Response|
+|-|-|-|
+|200 OK| application/json | -  |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
 
+### 8. Grade Final Report (Teacher)
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|PATCH|/reports/final|application/json| { <br>"first_name" : String, <br> "last_name": String <br> grade: Int[0-100] <br>} |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|200 OK| application/json | -  |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+### 9. See All Students (Admin)
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|GET|/users/students|application/json| - (session user) |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|200 OK| application/json | [ { "first_name": String, <br> "last_name" : String, <br> "grade1", : int \| null, <br> "grade2" : int \| null, <br> "assigned_teacher" : String <br> }.... ]  |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+### 10. Add A Student (Admin)
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|POST|/users/students|application/json| {first_name: String <br> last_name: String <br> password: String <br> assigned_teacher: String \| null <br>} |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|201 Created| application/json | -  |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+### 11. Assign a Teacher to Existing Student (Admin)
+
+#### Request
+
+| Method | Endpoint | Content-Type | payload |
+|-|-|-|-|
+|PATCH|/users/students|application/json| { <br>"first_name" : String, <br> "last_name": String <br> assigned_teacher: String <br>} |
+
+#### Response
+
+|Status| Content-Type |Response|
+|-|-|-|
+|200 OK| application/json | -  |
+|401 Unauthorized| application/json| { "error": "Session expired" }|
+
+## Database
 
 ```mermaid
 erDiagram
