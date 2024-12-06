@@ -56,14 +56,15 @@ const crossorigin = cors();
 app.use(crossorigin)
 
 //session management (cookies)
-app.use(session({
+/*app.use(session({
     secret: 'secret'
     
-}))
+}))*/
 
 // serve
-//app.use(history({ index : '/index.html' }))
-//app.use(express.static(__dirname + "/dist"))
+app.use(history({ index : '/index.html' }))
+app.use(express.static(__dirname + "/dist"))
+
 
 // listen
 const PORT = 8080;
