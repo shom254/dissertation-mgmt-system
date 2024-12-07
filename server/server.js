@@ -128,9 +128,115 @@ app.post('/api/users', express.json(), (req, res) => {
         db.close()
     } catch (error) {
         console.log(error)
-        res.status(400).json({ "error": "Missing credentials" })
+        res.status(400).json({ "error": "Invalid credentials" })
     }
 })
 
-//2. login (admin)
-app.post('/api/')
+
+app.delete('/api/users', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(error)
+            res.status(401).send({"error": "Session expired"})
+        }
+        else {
+            res.status(204).send() // no body
+        }
+        //redirect to home page (client side)
+    })
+})
+
+//2. admin login
+
+app.post('/api/admin', express.json(), (req, res) => {
+    try {
+        const { password } = req.body
+        if (password === 'admin') {
+            const user = { role: "admin" }
+            req.session.user = user
+            res.status(201).send()
+        }
+        else {
+            res.status(401).send({ "error" : "Incorrect Password"})
+        }
+    }
+    catch (error) {
+        console.log(error)
+        res.status(400).json({ "error": "Invalid credentials" })
+    }
+})
+
+app.delete('/api/users', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(error)
+            res.status(401).send({"error": "Session expired"})
+        }
+        else {
+            res.status(204).send() // no body
+        }
+        //redirect to home page (client side)
+    })
+})
+
+//3. get progress and final report (student | teacher)
+app.get('/api/reports', (req, res) => {
+    let db = new sqlite3.Database(source)
+    
+    const execute = function (id) { db.serialize(() => {
+        let report = {
+            progress: {
+                name: null,
+                filename: null, 
+                grade: null
+            },
+            final: {
+                name: null,
+                filename: null, 
+                grade: null
+            }
+        }
+        db.get(sql3_progress, [id], (err,row) => {
+            if (err) { 
+                console.log(err)
+                res.status(500).send({ error: "Sorry, please try again later"})
+                return report
+            }
+            if (row) {
+                console.log(row)
+                report.progress = { ...row }
+            }
+        }).get(sql3_final, [id], (err, row) => {
+            if (err) { 
+                console.log(err)
+                res.status(500).send({ error: "Sorry, please try again later"})
+                return report
+            }
+            if (row) {
+                console.log(row)
+                report.final = { ...row }
+            }
+            console.log(report)
+            res.status(200).json(report)
+        })
+    })
+    }
+
+    try {
+        if (req.session.user.role === 'student') {
+            //get id from session
+            const { id } = req.session.user
+            execute(id)
+        }
+        else {
+            //get id from body
+            const { id } = req.body
+            execute(id)
+        }
+        db.close()
+    }
+    catch (error) {
+        console.log(error)
+        res.status(400).json({ "error": "Invalid request" })
+    }
+})
