@@ -14,9 +14,13 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage })
 
+/*
 //cors (just in case/for development stage)
-app.use(cors())
-    //origin: 'http://localhost:8080',
+app.use(cors( {
+    origin: 'http:localhost:5173',
+    credentials: true,
+}))
+*/
 
 //session management (cookies)
 app.use(session({
@@ -24,22 +28,24 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     cookie: {
-        domain: '.localhost:8080',
         httpOnly: false,
         maxAge: 60000 * 10,
     }
 }))
 
 // serve
-app.use(history({ index : '/index.html' }))
-app.use(express.static(__dirname + "/dist"))
+//app.use(history({ index : '/index.html' }))
+//app.use(express.static(__dirname + "/dist"))
 
 
 // listen
 const PORT = 8080;
-app.listen(PORT, () => {
+app.listen(PORT, 'localhost', () => {
     console.log(`DMS Server started at PORT ${PORT}`)
 })
+
+// database
+const source = "reports.db"
 
 //e.g .console.log(GET - /api/users/)
 const logger = (request, response, next) => {
@@ -51,28 +57,6 @@ app.use(logger);
 
 //queries
 
-/*
-db.run(`CREATE TABLE user (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name text, 
-        email text UNIQUE, 
-        password text, 
-        CONSTRAINT email_unique UNIQUE (email)
-        )`,
-    (err) => {
-        if (err) {
-            // Table already created
-        }else{
-            // Table just created, creating some rows
-            var insert = 'INSERT INTO user (name, email, password) VALUES (?,?,?)'
-            db.run(insert, ["admin","admin@example.com",md5("admin123456")])
-            db.run(insert, ["user","user@example.com",md5("user123456")])
-        }
-});  
-*/
-
-//1. create the database connection
-const source = "reports.db"
 
 // ************id provided by session***************
 
@@ -117,36 +101,36 @@ const sql10_student = `INSERT INTO student (id, first_name, last_name, assigned_
 const sql11 = `UPDATE student SET assigned_teacher = (SELECT id FROM teacher WHERE (first_name || ' ' || last_name = ?))`
 
 // api endpoints
-app.post('/users', express.json(), (req, res) => {
-    // start db
-    console.log(req.session)
-    console.log(req.sessionID)
+
+//1. user login
+app.post('/api/users', express.json(), (req, res) => {
     let db = new sqlite3.Database(source)
-    if (req.body.hasOwnProperty('password')) {
+    try {
         const { password } = req.body
-        db.get(sql1, [password], (err, row) => {
-            if (err) {
-                console.log('error')
-                res.status(500).json({ error: "Internal Server Error" })
-                db.close()
-            }
-            else if (row) {
-                console.log('success')
-                res.status(201).json(row)
-                req.session.visited = true
-                req.session.save();
-                db.close()
-            }
-            else {
-                console.log('failed')
-                res.status(401).json({ error: "Incorrect Password" })
-                db.close()
-            }
+        db.serialize(() => {
+            db.get(sql1, [password], (err, row) => 
+            {
+                if (err) {
+                    console.log(err)
+                    res.status(500).send({ error: "Sorry, please try again later"})
+                    return
+                }
+                if (row) {
+                    console.log(row)
+                    req.session.user = row
+                    //user: { id: 5, password: 'u555555', role: 'student' }
+                    res.status(201).json(row)
+                    return
+                }
+                res.status(401).send({ "error" : "Incorrect Password"})
+            })
         })
-    }    
-    else {
-        res.status(400).json({ error: "Missing credentials" })
-        // close db
         db.close()
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ "error": "Missing credentials" })
     }
 })
+
+//2. login (admin)
+app.post('/api/')
