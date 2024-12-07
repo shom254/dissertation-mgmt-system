@@ -20,6 +20,8 @@ unforunately i could not finish the work on time but I hope I was able to demons
 
 ### Running the already-built app
 
+available at `localhost:8080`
+
 ```bash
 #1 go to server
 cd ./server
@@ -33,7 +35,7 @@ npm run serve
 
 ### Running client as development server
 
-The vue app can also be run from its normal development mode in `client` by Vite, at port `5173`.
+The vue app can also be run from its normal development mode in `client` by Vite, at `localhost:5173`.
 
 ```bash
 #1 go to client and install dependencies
