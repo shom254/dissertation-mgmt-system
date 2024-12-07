@@ -14,9 +14,74 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage })
 
+//cors (just in case/for development stage)
+app.use(cors({
+    origin: 'http://localhost:8080',
+    credentials: true
+}))
+
+//session management (cookies)
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        credentials: true,
+        maxAge: 60000 * 10,
+    }
+}))
+
+// serve
+app.use(history({ index : '/index.html' }))
+app.use(express.static(__dirname + "/dist"))
+
+
+// listen
+const PORT = 8080;
+app.listen(PORT, () => {
+    console.log(`DMS Server started at PORT ${PORT}`)
+})
+
+//e.g .console.log(GET - /api/users/)
+const logger = (request, response, next) => {
+    console.log(`${request.method} - ${request.url}`)
+    next();
+};
+app.use(logger);
+
+
 //queries
 
+/*
+db.run(`CREATE TABLE user (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name text, 
+        email text UNIQUE, 
+        password text, 
+        CONSTRAINT email_unique UNIQUE (email)
+        )`,
+    (err) => {
+        if (err) {
+            // Table already created
+        }else{
+            // Table just created, creating some rows
+            var insert = 'INSERT INTO user (name, email, password) VALUES (?,?,?)'
+            db.run(insert, ["admin","admin@example.com",md5("admin123456")])
+            db.run(insert, ["user","user@example.com",md5("user123456")])
+        }
+});  
+*/
+
+//1. create the database connection
+const source = "reports.db"
+
 // ************id provided by session***************
+
+//1. login (user)
+const sql1 = `SELECT * FROM user WHERE password = ?`
+
+//2. login (admin)
+//none. hardcoded.
 
 //3. get progress and final report (student)
 const sql3_progress = `SELECT name, filename, grade FROM student s JOIN progress_report p ON s.id = p.student_id WHERE s.id = ?`
@@ -52,41 +117,36 @@ const sql10_student = `INSERT INTO student (id, first_name, last_name, assigned_
 //special case because my logic is bad
 const sql11 = `UPDATE student SET assigned_teacher = (SELECT id FROM teacher WHERE (first_name || ' ' || last_name = ?))`
 
-//cors (just in case/for development stage)
-const crossorigin = cors();
-app.use(crossorigin)
-
-//session management (cookies)
-/*app.use(session({
-    secret: 'secret'
-    
-}))*/
-
-// serve
-app.use(history({ index : '/index.html' }))
-app.use(express.static(__dirname + "/dist"))
-
-
-// listen
-const PORT = 8080;
-app.listen(PORT, () => {
-    console.log(`DMS Server started at PORT ${PORT}`)
-})
-
-//e.g .console.log(GET - /api/users/)
-const logger = (request, response, next) => {
-    console.log(`${request.method} - ${request.url}`)
-    next();
-};
-app.use(logger);
-
-
 // api endpoints
-app.get('/api', (req, res) => { res.send('HEI')})
-
-
-
-
-
-
-
+app.post('/users', express.json(), (req, res) => {
+    // start db
+    console.log(req.session)
+    console.log(req.sessionID)
+    let db = new sqlite3.Database(source)
+    if (req.body.hasOwnProperty('password')) {
+        const { password } = req.body
+        db.get(sql1, [password], (err, row) => {
+            if (err) {
+                console.log('error')
+                res.status(500).json({ error: "Internal Server Error" })
+                db.close()
+            }
+            else if (row) {
+                console.log('success')
+                res.status(201).json(row)
+                req.session.user = row
+                db.close()
+            }
+            else {
+                console.log('success')
+                res.status(401).json({ error: "Incorrect Password" })
+                db.close()
+            }
+        })
+    }    
+    else {
+        res.status(400).json({ error: "Missing credentials" })
+        // close db
+        db.close()
+    }
+})
