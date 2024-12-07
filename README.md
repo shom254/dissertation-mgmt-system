@@ -1,6 +1,6 @@
 # Dissertation Management System
 
-Given only 3 days and also needing to study for the exams next week, my goal was to just try my best to quickly implement a **minimum functioning** vue frontend and api server + sqldatabase, so there are some rushed/missing design decisions to keep in mind:
+Given only 3 days and also needing to study for the exams next week, my goal was to just try my best to quickly implement a minimum functioning vue frontend and api server + sqldatabase, so there were some rushed/missing design decisions i planned to take:
 
 - all server functions in 1 source code file `server.js` (instead of structuring into `router`, `utils`, etc)
 - admin credentials hardcoded into server code and requires separate API
@@ -12,7 +12,7 @@ Given only 3 days and also needing to study for the exams next week, my goal was
 - passwords are stored unencrypted instead of hashed (for easier debugging and dev)
 - sessions are stored in-memory rather than to the database
 
-but I believe the basic requirements were fulfilled.
+unforunately i could not finish the work on time but I hope I was able to demonstrate the skills needed.
 
 ## Instructions to Run
 
