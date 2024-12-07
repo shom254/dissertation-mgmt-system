@@ -15,10 +15,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 //cors (just in case/for development stage)
-app.use(cors({
-    origin: 'http://localhost:8080',
-    credentials: true
-}))
+app.use(cors())
+    //origin: 'http://localhost:8080',
 
 //session management (cookies)
 app.use(session({
@@ -26,7 +24,8 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     cookie: {
-        credentials: true,
+        domain: '.localhost:8080',
+        httpOnly: false,
         maxAge: 60000 * 10,
     }
 }))
@@ -134,11 +133,12 @@ app.post('/users', express.json(), (req, res) => {
             else if (row) {
                 console.log('success')
                 res.status(201).json(row)
-                req.session.user = row
+                req.session.visited = true
+                req.session.save();
                 db.close()
             }
             else {
-                console.log('success')
+                console.log('failed')
                 res.status(401).json({ error: "Incorrect Password" })
                 db.close()
             }
