@@ -36,13 +36,15 @@ const admin = ref(false);
 const pw = ref({ password: '' })
 
 function toggle() {
-    admin = !admin
+    admin.value = !(admin.value)
     pw.value.password = ''
 }
 
+const origin = window.location.origin;
+
 async function userlogin() {
     try {
-        let response = await fetch('http:localhost:8080/api/users', {
+        let response = await fetch(origin + '/api/users', {
             method: 'POST',
             body: JSON.stringify(pw.value),
             headers: {
@@ -51,8 +53,10 @@ async function userlogin() {
         })
         switch (response.status) {
             case 201:
-                sessionStorage.setItem("user", response.body)
-                const role = JSON.parse(response.body).role
+                const body = await response.json()
+                console.log(JSON.stringify(body))
+                sessionStorage.setItem("user", JSON.stringify(body))
+                const role = body.role
                 alert(`Log in success. Welcome ${role}`)
                 if (role === 'student') router.push({name: 'student'})
                 else if (role === 'teacher') router.push({name: 'teacher'})
@@ -74,7 +78,7 @@ async function userlogin() {
 
 async function adminlogin() {
     try {
-        let response = await fetch('http:localhost:8080/api/admin', {
+        let response = await fetch(origin + '/api/admin', {
             method: 'POST',
             body: JSON.stringify(pw.value),
             headers: {
@@ -83,7 +87,8 @@ async function adminlogin() {
         })
         switch (response.status) {
             case 201:
-                sessionStorage.setItem("user", response.body)
+                const body = await response.text()
+                sessionStorage.setItem("user", body)
                 alert(`Log in success. Welcome admin`)
                 router.push({name: 'admin'})
                 break;

@@ -1,5 +1,5 @@
 const express = require('express')
-const cors = require('cors')
+//const cors = require('cors')
 const history = require('connect-history-api-fallback')
 const session = require('express-session')
 const sqlite3 = require('sqlite3').verbose()
@@ -32,17 +32,6 @@ app.use(session({
         maxAge: 60000 * 10,
     }
 }))
-
-// serve
-//app.use(history({ index : '/index.html' }))
-//app.use(express.static(__dirname + "/dist"))
-
-
-// listen
-const PORT = 8080;
-app.listen(PORT, 'localhost', () => {
-    console.log(`DMS Server started at PORT ${PORT}`)
-})
 
 // database
 const source = "reports.db"
@@ -135,6 +124,7 @@ app.post('/api/users', express.json(), (req, res) => {
                                 if (row) {
                                     Object.assign(user, row)
                                     req.session.user = user
+                                    console.log(user)
                                     res.status(201).json(user)
                                 }
                             })
@@ -307,4 +297,16 @@ app.get('/api/reports', (req, res) => {
         console.error(error)
         res.status(400).json({ "error": "Invalid request" })
     }
+})
+
+
+// serve
+app.use(history({ index : 'index.html' }))
+app.use(express.static(__dirname + "/dist"))
+
+
+// listen
+const PORT = 8080;
+app.listen(PORT, 'localhost', () => {
+    console.log(`DMS Server started at PORT ${PORT}`)
 })

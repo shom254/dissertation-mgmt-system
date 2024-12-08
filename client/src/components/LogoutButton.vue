@@ -3,10 +3,11 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-const router = useRoute();
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const origin = window.location.origin
 async function logout() {
-    const response = await(fetch('http:localhost:8080/api/admin', {
+    const response = await(fetch(origin + '/api/admin', {
         method: 'DELETE'
     }))
     switch (response.status) {
