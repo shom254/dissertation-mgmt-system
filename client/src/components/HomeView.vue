@@ -55,7 +55,7 @@ async function userlogin() {
             case 201:
                 const body = await response.json()
                 console.log(JSON.stringify(body))
-                sessionStorage.setItem("user", JSON.stringify(body))
+                localStorage.setItem("user", JSON.stringify(body))
                 const role = body.role
                 alert(`Log in success. Welcome ${role}`)
                 if (role === 'student') router.push({name: 'student'})
@@ -88,7 +88,7 @@ async function adminlogin() {
         switch (response.status) {
             case 201:
                 const body = await response.text()
-                sessionStorage.setItem("user", body)
+                localStorage.setItem("user", body)
                 alert(`Log in success. Welcome admin`)
                 router.push({name: 'admin'})
                 break;
