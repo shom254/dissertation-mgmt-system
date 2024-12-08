@@ -72,7 +72,7 @@ async function userlogin() {
     
 }
 
-function adminlogin() {
+async function adminlogin() {
     try {
         let response = await fetch('http:localhost:8080/api/admin', {
             method: 'POST',
