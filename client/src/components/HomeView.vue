@@ -6,7 +6,7 @@
             <h2>Admin Sign In</h2>
             
             <input class="inputtext" name="password" v-model="pw.password" type="password"/>
-            <button class="button" @click="userlogin"> Log In </button>
+            <button class="button" @click="adminlogin"> Log In </button>
 
             <h1>{{ dsdsd }}</h1>
             <span id="switchuser" @click="toggle">Regular User Login ></span>
@@ -16,7 +16,7 @@
             <h2>Please Sign In (Student / Teacher)</h2>
             
             <input class="inputtext" name="password" v-model="pw.password" type="password"/>
-            <button class="button" @click="adminlogin"> Log In </button>
+            <button class="button" @click="userlogin"> Log In </button>
 
             <h1>{{ dsdsd }}</h1>
             <span id="switchadmin" @click="toggle">Admin Login ></span>
