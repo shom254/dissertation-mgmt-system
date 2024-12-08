@@ -61,7 +61,9 @@ app.use(logger);
 // ************id provided by session***************
 
 //1. login (user)
-const sql1 = `SELECT * FROM user WHERE password = ?`
+const sql1_id = `SELECT id, role FROM user WHERE password = ?`
+const sql1_student = `SELECT first_name, last_name FROM student where id = ?`
+const sql1_teacher = `SELECT first_name, last_name FROM teacher where id = ?`
 
 //2. login (admin)
 //none. hardcoded.
@@ -106,44 +108,107 @@ const sql11 = `UPDATE student SET assigned_teacher = (SELECT id FROM teacher WHE
 app.post('/api/users', express.json(), (req, res) => {
     let db = new sqlite3.Database(source)
     try {
+        let user = {
+            id: null,
+            role: null,
+            first_name: null,
+            last_name: null
+        }
         const { password } = req.body
         db.serialize(() => {
-            db.get(sql1, [password], (err, row) => 
-            {
+            db.get(sql1_id, password, (err, row) => {
                 if (err) {
-                    console.log(err)
+                    console.error(err)
                     res.status(500).send({ error: "Sorry, please try again later"})
                     return
                 }
                 if (row) {
-                    console.log(row)
-                    req.session.user = row
-                    //user: { id: 5, password: 'u555555', role: 'student' }
-                    res.status(201).json(row)
-                    return
+                    //user: { id: 5, role: 'student' }
+                    Object.assign(user, row)
+                    db.serialize(() => {
+                        if (user.role === 'student') {
+                            db.get(sql1_student, user.id, (err,row) => {
+                                if (err) {
+                                    console.error(err)
+                                    res.status(500).send({ error: "Sorry, please try again later"})
+                                }
+                                if (row) {
+                                    Object.assign(user, row)
+                                    req.session.user = user
+                                    res.status(201).json(user)
+                                }
+                            })
+                        }
+                        else if (user.role === 'teacher') {
+                            db.get(sql1_teacher, user.id, (err,row) => {
+                                if (err) {
+                                    console.error(err)
+                                    res.status(500).send({ error: "Sorry, please try again later"})
+                                }
+                                if (row) {
+                                    Object.assign(user, row)
+                                    req.session.user = user
+                                    res.status(201).json(user)
+                                }
+                            })
+                        }
+                    })
                 }
-                res.status(401).send({ "error" : "Incorrect Password"})
+                else {
+                    res.status(401).json({"error": "Wrong password"})
+                }
             })
         })
-        db.close()
     } catch (error) {
-        console.log(error)
+        console.error(error)
         res.status(400).json({ "error": "Invalid credentials" })
     }
 })
 
 
+// app.post('/api/users', express.json(), (req, res) => {
+//     let db = new sqlite3.Database(source)
+//     try {
+//         const { password } = req.body
+//         db.serialize(() => {
+//             db.get(sql1, password, (err, row) => 
+//             {
+//                 if (err) {
+//                     console.error(err)
+//                     res.status(500).send({ error: "Sorry, please try again later"})
+//                     return
+//                 }
+//                 if (row) {
+//                     console.log(row)
+//                     req.session.user = row
+//                     //user: { id: 5, password: 'u555555', role: 'student' }
+//                     res.status(201).json(row)
+//                     return
+//                 }
+//                 res.status(401).send({ "error" : "Incorrect Password"})
+//             })
+//         })
+//         db.close()
+//     } catch (error) {
+//         console.error(error)
+//         res.status(400).json({ "error": "Invalid credentials" })
+//     }
+// })
+
+
 app.delete('/api/users', (req, res) => {
+    const user = req.session.user
     req.session.destroy((err) => {
         if (err) {
-            console.log(error)
+            console.error(error)
             res.status(401).send({"error": "Session expired"})
         }
         else {
+            console.log('DELETING USER: ' + JSON.stringify(user))
             res.status(204).send() // no body
         }
         //redirect to home page (client side)
-    })
+    })  
 })
 
 //2. admin login
@@ -161,18 +226,19 @@ app.post('/api/admin', express.json(), (req, res) => {
         }
     }
     catch (error) {
-        console.log(error)
+        console.error(error)
         res.status(400).json({ "error": "Invalid credentials" })
     }
 })
 
-app.delete('/api/users', (req, res) => {
+app.delete('/api/admin', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            console.log(error)
+            console.error(error)
             res.status(401).send({"error": "Session expired"})
         }
         else {
+            console.log('DELETING ADMIN')
             res.status(204).send() // no body
         }
         //redirect to home page (client side)
@@ -183,7 +249,7 @@ app.delete('/api/users', (req, res) => {
 app.get('/api/reports', (req, res) => {
     let db = new sqlite3.Database(source)
     
-    const execute = function (id) { db.serialize(() => {
+    const execute = function (id) { 
         let report = {
             progress: {
                 name: null,
@@ -196,30 +262,31 @@ app.get('/api/reports', (req, res) => {
                 grade: null
             }
         }
-        db.get(sql3_progress, [id], (err,row) => {
-            if (err) { 
-                console.log(err)
-                res.status(500).send({ error: "Sorry, please try again later"})
-                return report
-            }
-            if (row) {
-                console.log(row)
-                report.progress = { ...row }
-            }
-        }).get(sql3_final, [id], (err, row) => {
-            if (err) { 
-                console.log(err)
-                res.status(500).send({ error: "Sorry, please try again later"})
-                return report
-            }
-            if (row) {
-                console.log(row)
-                report.final = { ...row }
-            }
-            console.log(report)
-            res.status(200).json(report)
+        db.serialize(() => {
+            db.get(sql3_progress, [id], (err,row) => {
+                if (err) { 
+                    console.error(err)
+                    res.status(500).send({ error: "Sorry, please try again later"})
+                    return
+                }
+                if (row) {
+                    console.log(row)
+                    report.progress = { ...row }
+                }
+            }).get(sql3_final, [id], (err, row) => {
+                if (err) { 
+                    console.error(err)
+                    res.status(500).send({ error: "Sorry, please try again later"})
+                    return
+                }
+                if (row) {
+                    console.log(row)
+                    report.final = { ...row }
+                }
+                console.log(report)
+                res.status(200).json(report)
+            })
         })
-    })
     }
 
     try {
@@ -236,7 +303,7 @@ app.get('/api/reports', (req, res) => {
         db.close()
     }
     catch (error) {
-        console.log(error)
+        console.error(error)
         res.status(400).json({ "error": "Invalid request" })
     }
 })
