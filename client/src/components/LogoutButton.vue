@@ -1,10 +1,25 @@
 <template>
-    <button id="logout">Log Out</button>
+    <button id="logout" @click="logout">Log Out</button>
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router';
 const router = useRoute();
+async function logout() {
+    const response = await(fetch('http:localhost:8080/api/admin', {
+        method: 'DELETE'
+    }))
+    switch (response.status) {
+        case 204:
+            alert('You have been logged out successfully')
+            router.push({name: 'home'})
+            break;
+        case 401:
+            alert('Your session has already expired. Please log in again')
+            router.push({name: 'home'})
+            break;
+    }
+}
 
 //fetch() send DELETE Then push '/'
 

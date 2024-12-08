@@ -219,7 +219,7 @@ app.post('/api/admin', express.json(), (req, res) => {
         if (password === 'admin') {
             const user = { role: "admin" }
             req.session.user = user
-            res.status(201).send()
+            res.status(201).send(user)
         }
         else {
             res.status(401).send({ "error" : "Incorrect Password"})
@@ -232,13 +232,14 @@ app.post('/api/admin', express.json(), (req, res) => {
 })
 
 app.delete('/api/admin', (req, res) => {
+    let admin = req.session.user
     req.session.destroy((err) => {
         if (err) {
             console.error(error)
             res.status(401).send({"error": "Session expired"})
         }
         else {
-            console.log('DELETING ADMIN')
+            console.log('DELETING ADMIN ' + JSON.stringify(admin))
             res.status(204).send() // no body
         }
         //redirect to home page (client side)

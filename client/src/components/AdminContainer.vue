@@ -1,5 +1,5 @@
 <template>
-    <h1> HEllo World!</h1>
+    <h1> Admin Page (to be done)</h1>
 </template>
 
 <script setup>
