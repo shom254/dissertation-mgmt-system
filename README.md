@@ -8,6 +8,8 @@ unforunately i could not finish the work on time except for accounts and login s
 
 ### Sample Users
 
+Enter the `password` (e.g. `u111111`) in the input box on the login page.
+
 ```text
 id      |    password     |     role      |   first_name    |   last_name   |
 1             u111111           'student'     John                Doe
@@ -23,7 +25,7 @@ id      |    password     |     role      |   first_name    |   last_name   |
 11            Lee               'teacher'     Mary                Lee
 ```
 
-for admin: password is just `admin`
+**for admin: password is just `admin`**
 
 ### Running the already-built app
 
